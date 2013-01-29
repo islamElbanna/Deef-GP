@@ -1,11 +1,43 @@
 package inputLayer;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.SQLException;
+
+import parsingLayer.Parser;
+import reconstructionLayer.PreProcessing;
+import arabicToSignTranslation.AutomaticTranslation;
+import arabicToSignTranslation.Postprocessing;
+import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
 
 public class Main {
 
-	public static void main(String[] args) throws SQLException {
-
+	public static void main(String[] args) throws SQLException, IOException {
+		LexicalizedParser lp = LexicalizedParser.loadModel("edu/stanford/nlp/models/lexparser/arabicFactored.ser.gz");
+		AutomaticTranslation auto =  new AutomaticTranslation();
+		Parser parser =  new Parser();
+		PreProcessing p = new PreProcessing( lp,parser);
+		Postprocessing postPre = new Postprocessing();
+		while (true){
+	    	System.out.println("enter gomla");
+	    	InputStreamReader i = new InputStreamReader(System.in);
+	    	BufferedReader b = new BufferedReader(i);
+	    	String o = b.readLine();
+	    	String afterPreProcessing = p.run(o); 
+	    	System.out.println("after preprocessing \n"+afterPreProcessing+"\n");
+	    	String [][]words = auto.translate(lp,afterPreProcessing);
+	    	postPre.postprocessing(words, p.getHalflag());
+	    	for (int j = 0; j < words.length; j++) {
+				System.out.print(words[j][0] + " ");
+			}
+	    	
+	    	System.out.println();
+	    	p.AnaFlag = false;
+	    	p.AntFlag = false;
+	    	p.N7noFlag = false;
+	    	p.halFlag = false;
+		}
 	}
 
 	/**

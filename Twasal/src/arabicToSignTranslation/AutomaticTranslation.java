@@ -1,8 +1,6 @@
 package arabicToSignTranslation;
 
 import parsingLayer.*;
-import sun.reflect.generics.tree.Tree;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.io.BufferedReader;
@@ -32,8 +30,8 @@ public class AutomaticTranslation {
 	    	BufferedReader b = new BufferedReader(i);
 	    	String o = b.readLine();
 	    	String [][]words = p.translate(lp,o);;
-	    	Postprocessing post= new Postprocessing(words, false);
-	    	post.postprocessing();
+	    	Postprocessing post= new Postprocessing();
+	    	post.postprocessing(words, false);
 		    	
 	    		for (int j = 0; j < words.length; j++) {
 					for (int j2 = 0; j2 < words[j].length; j2++) {
