@@ -1,6 +1,8 @@
 package arabicToSignTranslation;
 
 import parsingLayer.*;
+import sun.reflect.generics.tree.Tree;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.io.BufferedReader;
