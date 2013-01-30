@@ -1,7 +1,6 @@
 package arabicToSignTranslation;
 
 import parsingLayer.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.io.BufferedReader;
@@ -93,14 +92,19 @@ public class AutomaticTranslation {
   public String[][] getSignWords() {
 	List<Tree> leaves= signTree.getLeaves();
 	String [][] signWords = new String [leaves.size()][3];
+	boolean found = false;
 	for (int i = 0; i < signWords.length; i++) {
-		for (int j = 0; j < words.length; j++) {
+		found = false;
+		for (int j = 0; j < words.length && !found; j++) {
 			if(words[j][0].equalsIgnoreCase(leaves.get(i).label().value())){
 				signWords[i] [0]= words[j][0];
 				signWords[i] [1]= words[j][1];
 				signWords[i] [2]= words[j][2];
-				break;
+				found = true;
 			}
+		}
+		if (!found){
+			signWords[i] [0]= leaves.get(i).label().value();
 		}
 	}
 	return signWords;
@@ -201,12 +205,20 @@ private void parseWasel(int index,Tree t) {
 	  }
   }
 
+private int getVerbIndex(Tree [] arr){
+	for (int i = 0; i < arr.length; i++) {
+		if(arr[i].label().value().equalsIgnoreCase("S")){
+			return i-1;
+		}
+	}
+	return arr.length;
+}
 private void parseVerbPhrase(Tree t){
 	  Tree [] childrens = t.children();
 	  boolean fa3le = false;
 
 	  if (childrens[0].label().value().contains("PRT")){
-		  if (childrens[0].firstChild().label().value().equalsIgnoreCase("ÓæÝ")){
+		  if (childrens[0].firstChild().label().value().equalsIgnoreCase("Ø³ÙˆÙ")){
 			  t.removeChild(0);
 			  String label = t.firstChild().label().value();
 			  t.firstChild().setLabel(new nodeValue("VBF"+label.substring(3, label.length())));
@@ -218,7 +230,7 @@ private void parseVerbPhrase(Tree t){
 	  for (int i = 0; i < childrens.length; i++) {
 		if (childrens[i].label().value().contains("VBD") || childrens[i].label().value().contains("VBP")|| childrens[i].label().value().contains("VBF")){
 			System.out.println("in VERB");
-			t.addChild(childrens[i]);
+			t.addChild(getVerbIndex(childrens),childrens[i]);
 			t.removeChild(i);
 			break;
 		}
