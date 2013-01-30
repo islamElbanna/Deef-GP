@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+
 
 public class DbConnection {
 
@@ -35,10 +37,26 @@ public class DbConnection {
 	}
 	
 	public boolean excute(String query){
-		return true;
+		Statement sta;
+		try {
+			sta = con.createStatement();
+			return sta.execute(query);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 	public ResultSet excuteQuery (String query){
+		Statement sta;
+		try {
+			sta = con.createStatement();
+			return sta.executeQuery(query);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 	

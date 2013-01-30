@@ -1,5 +1,8 @@
 package databaseLayer;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 
 public class Database implements Database_Interface {
 
@@ -12,13 +15,27 @@ public class Database implements Database_Interface {
 	
 	@Override
 	public boolean checkWord(String word) {
-		// TODO Auto-generated method stub
+		ResultSet result = con.excuteQuery("select trsnalton from wordMapping where wordkey="+word+";");
+		try {
+			while(result.next()){
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return false;
 	}
 
 	@Override
 	public String getTranslation(String word) {
-		// TODO Auto-generated method stub
+		ResultSet result = con.excuteQuery("select trsnalton from wordMapping where wordkey="+word+";");
+		try {
+			while(result.next()){
+				return result.getString("translation");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
