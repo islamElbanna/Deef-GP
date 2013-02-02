@@ -16,8 +16,12 @@ import edu.stanford.nlp.trees.TreePrint;
 import edu.stanford.nlp.trees.TreebankLanguagePack;
 import edu.stanford.nlp.trees.TypedDependency;
 
-public class Parser {
+public class Parser implements parser_Interface{
 	public List<TypedDependency> grammer;
+	
+	public Parser() {
+		
+	}
 	
 	public Tree parseArabic(LexicalizedParser lp, String sent2){
 	    TokenizerFactory<CoreLabel> tokenizerFactory = PTBTokenizer.factory(new CoreLabelTokenFactory(), "");

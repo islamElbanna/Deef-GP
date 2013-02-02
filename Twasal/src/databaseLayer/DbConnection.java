@@ -2,9 +2,11 @@ package databaseLayer;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 
 
 public class DbConnection {
@@ -26,7 +28,7 @@ public class DbConnection {
 		    //Create the connection using the static getConnection method
 		    con = DriverManager.getConnection (db.getHost()+db.getDatabase(), db.getUsername(), db.getPassword());
 		        
-		    System.out.println("connection done...");
+		    System.out.println("DataBase connection done...");
 		}
 		catch (SQLException e) {
 		    e.printStackTrace();
@@ -37,9 +39,9 @@ public class DbConnection {
 	}
 	
 	public boolean excute(String query){
-		Statement sta;
+		PreparedStatement sta;
 		try {
-			sta = con.createStatement();
+			sta = con.prepareStatement(query);
 			return sta.execute(query);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -49,9 +51,10 @@ public class DbConnection {
 	}
 	
 	public ResultSet excuteQuery (String query){
-		Statement sta;
+		
+		PreparedStatement sta;
 		try {
-			sta = con.createStatement();
+			sta = con.prepareStatement(query);
 			return sta.executeQuery(query);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

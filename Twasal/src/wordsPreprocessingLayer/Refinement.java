@@ -1,6 +1,6 @@
 package wordsPreprocessingLayer;
 
-import reconstructionLayer.TokenStream;
+//import reconstructionLayer.TokenStream;
 
 public interface Refinement {
 
@@ -10,6 +10,6 @@ public interface Refinement {
 	 * @param str
 	 * @return
 	 */
-	public WordsStream refine (TokenStream str);
+	public String [][] extractSentence (String [][] words);
 	
 }

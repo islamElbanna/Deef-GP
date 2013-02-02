@@ -5,32 +5,67 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
 
+import databaseLayer.Database;
+
 import parsingLayer.Parser;
-import reconstructionLayer.PreProcessing;
+import postProcessing.Postprocessing;
+import preProcessingLayer.PreProcessing;
+import wordsPreprocessingLayer.WordExtractor;
+import animationBuilderLayer.AnimatorBuilder;
+import animationBuilderLayer.Code;
 import arabicToSignTranslation.AutomaticTranslation;
-import arabicToSignTranslation.Postprocessing;
 import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
 
 public class Main {
 
 	public static void main(String[] args) throws SQLException, IOException {
+		//load lib
 		LexicalizedParser lp = LexicalizedParser.loadModel("edu/stanford/nlp/models/lexparser/arabicFactored.ser.gz");
-		AutomaticTranslation auto =  new AutomaticTranslation();
+		
+		// create parser
 		Parser parser =  new Parser();
-		PreProcessing p = new PreProcessing( lp,parser);
+		
+		Database db = new Database ();
+		
+		// pre-processing
+		PreProcessing p = new PreProcessing(lp, parser);
+		
+		// Translation
+		AutomaticTranslation auto =  new AutomaticTranslation();
+		
+		// post-processing
 		Postprocessing postPre = new Postprocessing();
+		
+		//words refinemants 
+		WordExtractor wordAnalysis = new WordExtractor(db);
+		
+		AnimatorBuilder animatorBuilder = new AnimatorBuilder(db);
+
 		while (true){
 	    	System.out.println("enter gomla");
 	    	InputStreamReader i = new InputStreamReader(System.in);
 	    	BufferedReader b = new BufferedReader(i);
 	    	String o = b.readLine();
-	    	String afterPreProcessing = p.run(o); 
+	
+	    	// pre-processing
+	    	String afterPreProcessing = p.preProcessing(o); 
 	    	System.out.println("after preprocessing \n"+afterPreProcessing+"\n");
-	    	String [][]words = auto.translate(lp,afterPreProcessing);
-	    	postPre.postprocessing(words, p.getHalflag());
+	    	
+	    	// parsing, translation 
+	    	String [][]words = auto.translate(lp, afterPreProcessing);
+	    	
+	    	// post rocessing
+	    	postPre.postProcessing(words, p.getHalflag());
 	    	for (int j = 0; j < words.length; j++) {
-				System.out.print(words[j][0] + " ");
+				System.out.print(words[j][1] + " ");
 			}
+
+	    	// words refinements
+	    	String [][] wordsAfterProcessing = wordAnalysis.extractSentence(words);
+	    	
+	    	Code code = animatorBuilder.buildAnimator(wordsAfterProcessing);
+	    	
+	    	System.out.println(code.getCode());
 	    	
 	    	System.out.println();
 	    	p.AnaFlag = false;
