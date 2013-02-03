@@ -7,6 +7,6 @@ public interface AnimatorBuilder_Interface {
 	 * @param stream
 	 * @return
 	 */
-	public Code buildAnimator (String [][] stream);
+	public String buildAnimator (String [][] stream);
 	
 }

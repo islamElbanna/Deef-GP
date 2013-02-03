@@ -11,11 +11,12 @@ public class AnimatorBuilder implements AnimatorBuilder_Interface {
 	}
 	
 	@Override
-	public Code buildAnimator(String[][] stream) {
-		Code c = new Code();
+	public String buildAnimator(String[][] stream) {
+		String c = "";
 		
 		for (int i = 0; i < stream.length; i++) {
-			c.addCode(db.getTranslation(stream[i][0]));
+			System.out.println(db.getTranslation(stream[i][0]));
+			c += db.getTranslation(stream[i][0]);
 		}
 		
 		return c;

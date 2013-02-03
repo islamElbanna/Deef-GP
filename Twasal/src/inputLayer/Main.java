@@ -5,73 +5,79 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
 
-import databaseLayer.Database;
-
 import parsingLayer.Parser;
 import postProcessing.Postprocessing;
 import preProcessingLayer.PreProcessing;
 import wordsPreprocessingLayer.WordExtractor;
 import animationBuilderLayer.AnimatorBuilder;
-import animationBuilderLayer.Code;
 import arabicToSignTranslation.AutomaticTranslation;
+import avatarLayer.Avatar;
+import databaseLayer.Database;
 import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
 
 public class Main {
 
 	public static void main(String[] args) throws SQLException, IOException {
-		//load lib
-		LexicalizedParser lp = LexicalizedParser.loadModel("edu/stanford/nlp/models/lexparser/arabicFactored.ser.gz");
-		
+		// load lib
+		LexicalizedParser lp = LexicalizedParser
+				.loadModel("edu/stanford/nlp/models/lexparser/arabicFactored.ser.gz");
+
 		// create parser
-		Parser parser =  new Parser();
-		
-		Database db = new Database ();
-		
+		Parser parser = new Parser();
+
+		Database db = new Database();
+
 		// pre-processing
 		PreProcessing p = new PreProcessing(lp, parser);
-		
+
 		// Translation
-		AutomaticTranslation auto =  new AutomaticTranslation();
-		
+		AutomaticTranslation auto = new AutomaticTranslation();
+
 		// post-processing
 		Postprocessing postPre = new Postprocessing();
-		
-		//words refinemants 
+
+		// words refinemants
 		WordExtractor wordAnalysis = new WordExtractor(db);
-		
+
 		AnimatorBuilder animatorBuilder = new AnimatorBuilder(db);
 
-		while (true){
-	    	System.out.println("enter gomla");
-	    	InputStreamReader i = new InputStreamReader(System.in);
-	    	BufferedReader b = new BufferedReader(i);
-	    	String o = b.readLine();
-	
-	    	// pre-processing
-	    	String afterPreProcessing = p.preProcessing(o); 
-	    	System.out.println("after preprocessing \n"+afterPreProcessing+"\n");
-	    	
-	    	// parsing, translation 
-	    	String [][]words = auto.translate(lp, afterPreProcessing);
-	    	
-	    	// post rocessing
-	    	postPre.postProcessing(words, p.getHalflag());
-	    	for (int j = 0; j < words.length; j++) {
+		Avatar avatar = new Avatar();
+
+		while (true) {
+			System.out.println("enter gomla");
+			InputStreamReader i = new InputStreamReader(System.in);
+			BufferedReader b = new BufferedReader(i);
+			String o = b.readLine();
+
+			// pre-processing
+			String afterPreProcessing = p.preProcessing(o);
+			System.out.println("after preprocessing \n" + afterPreProcessing
+					+ "\n");
+
+			// parsing, translation
+			String[][] words = auto.translate(lp, afterPreProcessing);
+
+			// post rocessing
+			postPre.postProcessing(words, p.getHalflag());
+			for (int j = 0; j < words.length; j++) {
 				System.out.print(words[j][1] + " ");
 			}
 
-	    	// words refinements
-	    	String [][] wordsAfterProcessing = wordAnalysis.extractSentence(words);
-	    	
-	    	Code code = animatorBuilder.buildAnimator(wordsAfterProcessing);
-	    	
-	    	System.out.println(code.getCode());
-	    	
-	    	System.out.println();
-	    	p.AnaFlag = false;
-	    	p.AntFlag = false;
-	    	p.N7noFlag = false;
-	    	p.halFlag = false;
+			// words refinements
+			String[][] wordsAfterProcessing = wordAnalysis
+					.extractSentence(words);
+
+			String code = animatorBuilder.buildAnimator(wordsAfterProcessing);
+
+			avatar.show(code);
+
+			//System.out.println(code);
+
+			System.out.println();
+			p.AnaFlag = false;
+			p.AntFlag = false;
+			p.N7noFlag = false;
+			p.halFlag = false;
 		}
 	}
 

@@ -46,7 +46,7 @@ public class Database implements Database_Interface {
 		else if (word.compareTo("ãÏÑÓÉ") == 0)
 			return "75,lhumerus,-65,37,-82|80,lradius,-339,-30,284|80,rhumerus,-37,-22,14|80,rradius,1,25,87|80,l4Dist,-44,-15,-9|80,l3Dist,-63,-18,-3|80,l4Prox,-44,-15,-9|80,l3Prox,-63,-18,-3|80,lradius,-79,-16,307|85,lradius,-79,-32,257|90,lradius,-79,-40,257|95,lradius,-79,-32,257|100,lradius,-79,-40,257|";
 		else 
-			return "10,lradius,35,17,-6|10,lhand,23,5,-2|15,lradius,51,17,-6|20,lradius,35,17,-6|24,lradius,51,17,-6|28,lradius,35,17,-6|32,lradius,51,17,-6|";
+			return "100,lradius,-172,-145,418|104,lradius,-189,-153,472|108,lradius,-172,-145,418|112,lradius,-172,-145,418|116,lradius,-189,-153,472|120,lradius,-172,-145,418|play,1";
 	}
 
 	@Override
