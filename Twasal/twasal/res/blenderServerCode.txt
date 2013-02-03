@@ -1,0 +1,47 @@
+import socket
+import threading
+import time
+
+def parse_line(line):
+    lines = line.split("|");
+    for x in lines:
+        line_arr = x.split(",");
+        if line_arr[0] == "play" :
+            play_frame(line_arr[1]);
+        else :
+            print(x)
+            add_move_to_frame(int(line_arr[0]), line_arr[1], int(line_arr[2]), int(line_arr[3]), int(line_arr[4]));
+    return;
+
+
+def play_frame(frame):
+    bpy.context.scene.frame_set(int(frame));
+    bpy.ops.screen.animation_play();
+    return;
+
+def add_move_to_frame(frame_num, bone_name, x, y, z):
+    bpy.context.scene.frame_set(frame_num)
+    bpy.data.objects['girl'].pose.bones[bone_name].rotation_mode = 'XYZ'
+    bpy.data.objects['girl'].pose.bones[bone_name].rotation_euler[0] = (x * 3.14 ) / 180 ;
+    bpy.data.objects['girl'].pose.bones[bone_name].rotation_euler[1] = (y * 3.14 ) / 180;
+    bpy.data.objects['girl'].pose.bones[bone_name].rotation_euler[2] = (z * 3.14 ) / 180;
+    bpy.ops.anim.keyframe_insert_menu(type='Rotation');
+    return;
+
+def server():
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind(("", 56734))
+    server_socket.listen(5)
+    print("TCP Server Waiting for client on port 5000")
+    client_socket, address = server_socket.accept()
+    print("TCP Server received connect from: " + str(address))
+    data = "SEND(Type q or Q to quit):"
+    data = data + '\n'
+    if(data == 'Q' or data == 'q'):
+        client_socket.send(data)
+    else:
+        client_socket.send(data.encode())
+        data = client_socket.recv(1024)
+    client_socket.close()
+    java_output = str(data).replace("'","")[1:len(str(data))]
+    parse_line(java_output)
