@@ -1,1 +1,0 @@
-10,lradius,35,17,-6|10,lhand,23,5,-2|15,lradius,51,17,-6|20,lradius,35,17,-6|24,lradius,51,17,-6|28,lradius,35,17,-6|32,lradius,51,17,-6|
